@@ -1,285 +1,531 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Happy Birthday — Cupcake 🧁</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Cupcake 🧁</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
 
-  <style>
-    :root{
-      --bgA:#fff6fb;  /* very soft pink */
-      --bgB:#f5f3ff;  /* lavender */
-      --accent1:#ff7ab6;
-      --accent2:#9b8cff;
-      --muted:#2f2f36;
-      --maxw:1100px;
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{
-      font-family:Inter, 'Poppins', system-ui, -apple-system, "Segoe UI", Roboto;
-      color:var(--muted);
-      background:
-        radial-gradient(800px 350px at 12% 12%, rgba(255,244,248,0.95), transparent 6%),
-        radial-gradient(700px 300px at 88% 88%, rgba(244,240,255,0.95), transparent 6%),
-        linear-gradient(180deg,var(--bgA),var(--bgB));
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      overflow-x:hidden;
-    }
+        /* Password Screen */
+        #passwordScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
 
-    /* minimal header */
-    header{max-width:var(--maxw);margin:28px auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center}
-    .brand{font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--muted);opacity:0.95}
-    nav a{color:var(--muted);text-decoration:none;font-weight:600;opacity:0.9;margin-left:14px;font-size:0.95rem}
+        #passwordScreen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-    /* password overlay (kept, simple) */
-    #passwordScreen{
-      position:fixed; inset:0; display:flex;align-items:center;justify-content:center;
-      background:linear-gradient(180deg, rgba(6,6,10,0.75), rgba(6,6,10,0.88));
-      z-index:9999;backdrop-filter:blur(6px);
-    }
-    #passwordScreen.hidden{opacity:0;pointer-events:none;transform:scale(1.02);transition:opacity .4s, transform .4s}
-    .pwd{
-      width:min(92%,480px); background:transparent; text-align:center; color:#fff; padding:26px; border-radius:14px;
-      border:1px solid rgba(255,255,255,0.08);
-    }
-    .pwd h2{font-family:'Playfair Display',serif;font-size:1.7rem;margin-bottom:6px}
-    .pwd input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); color:#fff; margin-top:10px}
-    .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer}
-    .btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#fff;font-weight:700}
-    .hint{margin-top:10px;color:rgba(255,255,255,0.7);font-size:0.9rem}
+        .password-container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
 
-    /* centered hero (n1-like) */
-    .hero-wrap{min-height:78vh;display:flex;align-items:center;justify-content:center;padding:0 20px;position:relative;z-index:2}
-    .hero{
-      max-width:900px;text-align:center;padding:80px 28px 96px;border-radius:14px;background:transparent;
-    }
-    .hero h1{
-      font-family:'Playfair Display',serif;
-      font-size:64px;line-height:0.98;margin-bottom:18px;color:var(--muted);
-      letter-spacing:-1px;
-      text-wrap:balance;
-    }
-    .hero p.lead{font-size:18px;color:rgba(47,47,54,0.72);max-width:760px;margin:0 auto 24px;line-height:1.6}
-    .hero .cta{display:inline-flex;gap:12px}
-    .hero .cta .btn{font-weight:700}
+        .password-container h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
 
-    /* subtle animated gradient bar under hero (n1-like accent) */
-    .accent-bar{height:8px;margin:24px auto 0;width:160px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));filter:blur(6px);opacity:0.95}
+        .password-container input {
+            padding: 15px 25px;
+            font-size: 1.1em;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            margin: 20px 0;
+            width: 300px;
+            text-align: center;
+        }
 
-    /* content sections — minimal, spaced out (no heavy cards) */
-    .content{max-width:var(--maxw);margin:48px auto;padding:0 20px}
-    .section{padding:28px 0;border-top:1px solid rgba(0,0,0,0.03)}
-    .section .title{font-family:'Playfair Display',serif;font-size:22px;color:var(--muted);margin-bottom:12px}
-    .muted{color:rgba(47,47,54,0.78);line-height:1.6}
+        .password-container input:focus {
+            outline: none;
+            border-color: #ffffff;
+        }
 
-    /* memories list: simple vertical list */
-    .mem-list{display:grid;gap:18px;max-width:900px;margin-top:12px}
-    .mem-item{display:flex;gap:16px;align-items:flex-start}
-    .mem-date{min-width:180px;font-family:'Playfair Display',serif;color:var(--accent2);font-size:1rem}
-    .mem-text{color:var(--muted);font-size:1rem}
+        .password-container button {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
 
-    /* reveal rows */
-    .reveal{cursor:pointer;padding:14px;border-radius:10px;border:1px dashed rgba(0,0,0,0.05);display:block}
-    .reveal .content{max-height:0;overflow:hidden;transition:max-height .35s ease,opacity .25s;opacity:0}
-    .reveal.open .content{max-height:420px;opacity:1;margin-top:12px}
+        .password-container button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        }
 
-    /* gallery: clean grid */
-    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:12px}
-    .gallery img{width:100%;height:130px;object-fit:cover;border-radius:8px;cursor:pointer;transition:transform .22s}
-    .gallery img:hover{transform:scale(1.03)}
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 0.9em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
 
-    /* lightbox (minimal) */
-    .lightbox{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(6,6,10,0.72);z-index:9998;opacity:0;pointer-events:none;transition:opacity .25s}
-    .lightbox.open{opacity:1;pointer-events:auto}
-    .lightbox img{max-width:92%;max-height:88%;border-radius:10px}
+        .error-message.show {
+            opacity: 1;
+        }
 
-    /* footer */
-    footer{max-width:var(--maxw);margin:40px auto 80px;padding:0 20px;text-align:center;color:rgba(47,47,54,0.7)}
+        /* Main Content */
+        #mainContent {
+            display: none;
+        }
 
-    /* tiny sparkles layer (subtle animated dots) */
-    .dots{position:fixed;inset:0;pointer-events:none;z-index:1}
-    .dot{position:absolute;width:6px;height:6px;border-radius:999px;background:rgba(255,255,255,0.9);opacity:0.15;filter:blur(2px);animation:dotfloat 8s linear infinite}
-    @keyframes dotfloat{0%{transform:translateY(0)}50%{transform:translateY(-18px)}100%{transform:translateY(0)}}
+        #mainContent.visible {
+            display: block;
+        }
 
-    /* responsive */
-    @media (max-width:900px){
-      .hero h1{font-size:40px}
-      .hero p.lead{font-size:16px}
-      .mem-date{min-width:120px}
-    }
-    @media (max-width:480px){
-      .hero h1{font-size:28px}
-      header{padding:0 12px}
-      .brand{font-size:0.9rem}
-      nav{display:none}
-    }
-  </style>
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .floating-hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.6;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section h2 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .letter {
+            line-height: 1.8;
+            font-size: 1.2em;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .memory-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 15px;
+            border-left: 4px solid #ffffff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .memory-card:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .memory-date {
+            font-weight: bold;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .memory-text {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .reveal-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+        }
+
+        .reveal-box:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.02);
+        }
+
+        .reveal-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .reveal-content.visible {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .wishes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .wish-item {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .wish-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px);
+        }
+
+        .wish-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .final-message {
+            text-align: center;
+            font-size: 1.8em;
+            padding: 60px 20px;
+            line-height: 1.6;
+        }
+
+        .signature {
+            margin-top: 40px;
+            font-size: 1.5em;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            .subtitle {
+                font-size: 1.2em;
+            }
+            .section {
+                margin: 40px 20px;
+                padding: 25px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- subtle decorative dots -->
-  <div class="dots" aria-hidden="true">
-    <div class="dot" style="left:10%;top:18%;animation-delay:0s"></div>
-    <div class="dot" style="left:28%;top:72%;animation-delay:1.1s"></div>
-    <div class="dot" style="left:62%;top:40%;animation-delay:.6s"></div>
-    <div class="dot" style="left:84%;top:82%;animation-delay:1.8s"></div>
-  </div>
-
-  <!-- password overlay (kept) -->
-  <div id="passwordScreen" role="dialog" aria-modal="true" aria-label="Enter password to unlock">
-    <div class="pwd">
-      <h2>🧁 A Little Surprise Awaits</h2>
-      <input id="passwordInput" type="password" placeholder="Password (case-sensitive)" />
-      <div style="margin-top:12px">
-        <button class="btn btn-primary" onclick="checkPassword()">Unlock</button>
-      </div>
-      <div class="hint">Tip: It's sweet + a date.</div>
+    <!-- Password Screen -->
+    <div id="passwordScreen">
+        <div class="password-container">
+            <h2>🧁 Something Special Awaits 🧁</h2>
+            <p style="margin-bottom: 20px; opacity: 0.8;">Enter the password to unlock your birthday surprise</p>
+            <input type="password" id="passwordInput" placeholder="Enter password">
+            <br>
+            <button onclick="checkPassword()">Unlock</button>
+            <p class="error-message" id="errorMessage">Incorrect password. Try again!</p>
+        </div>
     </div>
-  </div>
 
-  <!-- header (minimal) -->
-  <header>
-    <div class="brand">Forever — Your Pookie 💕</div>
-    <nav>
-      <a href="#memories">Memories</a>
-      <a href="#gallery">Photos</a>
-      <a href="#letter">Letter</a>
-    </nav>
-  </header>
+    <!-- Main Content -->
+    <div id="mainContent">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="floating-hearts" id="heartsContainer"></div>
+            <h1>Happy Birthday, Cupcake! 🧁</h1>
+            <p class="subtitle">To the sweetest person in my world</p>
+            <p style="font-size: 1.2em; opacity: 0.8;">October 17, 2025</p>
+        </div>
 
-  <!-- centered hero -->
-  <div class="hero-wrap">
-    <div class="hero" role="main" id="hero">
-      <h1 id="heroTitle">Happy Birthday, Cupcake 🧁</h1>
-      <p class="lead">You make every moment sweeter. Today we celebrate your smile, your warmth, and your beautiful heart.</p>
+        <!-- Love Letter Section -->
+        <div class="section">
+            <h2>A Letter From Your Pookie 💌</h2>
+            <div class="letter">
+                <p>My Dearest Jaan,</p>
+                <br>
+                <p>As you turn another year more beautiful, I find myself miles away but closer to you than ever in my heart. Distance means so little when someone means so much, and you, my love, mean everything to me.</p>
+                <br>
+                <p>Every moment we've shared, from that first train ride to Patna where you rested on my lap, to those stolen glances at V Mart when the lights went out and my heart raced faster than ever - they're all treasured memories that I carry with me always.</p>
+                <br>
+                <p>You're not just my Cupcake, you're my sweetest dream come true. Your brown eyes hold entire galaxies, your smile lights up my darkest days, and your presence makes every moment magical.</p>
+                <br>
+                <p>Today, I wish I could be there to hold your hand, to see your smile, to make you feel as special as you make me feel every single day. But until we meet again, know that my love travels across every mile to reach you.</p>
+            </div>
+        </div>
 
-      <div class="cta">
-        <button class="btn btn-primary" onclick="scrollToSection('memories')">Our Memories</button>
-        <button class="btn" onclick="scrollToSection('gallery')">See Photos</button>
-      </div>
+        <!-- Our Memories Section -->
+        <div class="section">
+            <h2>Our Beautiful Journey 🌟</h2>
+            
+            <div class="memory-card">
+                <div class="memory-date">March 21, 2025 - The Train to Patna 🚂</div>
+                <div class="memory-text">
+                    The day that changed everything. We talked freely, face to face, and time just stopped. You rested on my lap, and I gave you a head massage while you dozed off. We shared pizza and 7UP, but what we really shared was something much deeper. When I reached Patna, I felt so alone because I'd left my heart with you.
+                </div>
+            </div>
 
-      <div class="accent-bar" aria-hidden="true"></div>
+            <div class="memory-card">
+                <div class="memory-date">April 2, 2025 - Parasnath Meeting 💫</div>
+                <div class="memory-text">
+                    You weren't feeling well, but seeing you on your way back made everything better. Even in those moments, you were the most beautiful thing I'd ever seen.
+                </div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-date">April 22, 2025 - V Mart (Our First Real Date) 💕</div>
+                <div class="memory-text">
+                    Our first outside meet after we confessed our feelings. I held your hand, and I got completely lost in your eyes. That moment felt like the world had disappeared and it was just us two.
+                </div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-date">May 5, 2025 - The Light Cut Moment ⚡</div>
+                <div class="memory-text">
+                    You planned this day for us. When the lights suddenly went out at V Mart, my heart started beating so fast. In that darkness, I got to gaze at you, and even though it was short, it was absolutely memorable. Every second with you is precious.
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Reveal Section -->
+        <div class="section">
+            <h2>Click to Reveal 💝</h2>
+            
+            <div class="reveal-box" onclick="toggleReveal('reveal1')">
+                <p style="font-size: 1.3em;">💭 What I Love Most About You</p>
+                <p style="opacity: 0.7; margin-top: 10px;">(Click to reveal)</p>
+                <div class="reveal-content" id="reveal1">
+                    <p style="margin-top: 20px; line-height: 1.8;">
+                        I love how you call me Pookie, Janu, and Janemann - each name feels like a warm hug. I love your brown eyes that hold so much depth and warmth. I love how you enjoy simple things like kiwis and mangoes. I love that you dream of Vrindavan and Barsana. I love your gentle spirit that adores cows and puppies. I love everything about you, from your 5'2" frame to your beautiful black hair. But most of all, I love your heart - the way you care, the way you love, the way you make me feel like the luckiest person alive.
+                    </p>
+                </div>
+            </div>
+
+            <div class="reveal-box" onclick="toggleReveal('reveal2')">
+                <p style="font-size: 1.3em;">🌙 My Promise to You</p>
+                <p style="opacity: 0.7; margin-top: 10px;">(Click to reveal)</p>
+                <div class="reveal-content" id="reveal2">
+                    <p style="margin-top: 20px; line-height: 1.8;">
+                        I promise to always cherish these miles between us until there are none. I promise to keep planning more beautiful moments like the ones we've already shared. I promise to protect your privacy and your heart the way I protect my own. I promise to be your Pookie forever, to make you smile even from far away, and to love you more with each passing day. One day soon, we won't have to plan meetings - we'll just be together, creating memories every single day.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Birthday Wishes Section -->
+        <div class="section">
+            <h2>Wishes for Your Beautiful Year Ahead ✨</h2>
+            <div class="wishes-grid">
+                <div class="wish-item">
+                    <div class="wish-icon">🌟</div>
+                    <p>May this year bring you endless joy and make all your dreams come true</p>
+                </div>
+                <div class="wish-item">
+                    <div class="wish-icon">💫</div>
+                    <p>May you achieve everything your beautiful heart desires</p>
+                </div>
+                <div class="wish-item">
+                    <div class="wish-icon">🌸</div>
+                    <p>May your days be filled with laughter, love, and magical moments</p>
+                </div>
+                <div class="wish-item">
+                    <div class="wish-icon">🦋</div>
+                    <p>May you continue to grow into the amazing person you already are</p>
+                </div>
+                <div class="wish-item">
+                    <div class="wish-icon">🌈</div>
+                    <p>May colors of happiness paint every day of your life</p>
+                </div>
+                <div class="wish-item">
+                    <div class="wish-icon">💝</div>
+                    <p>May our love grow stronger with every sunrise and sunset</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Message -->
+        <div class="section">
+            <div class="final-message">
+                <p>Happy Birthday, my beautiful Cupcake! 🧁</p>
+                <br>
+                <p>You make my world brighter, my days sweeter, and my life infinitely more meaningful.</p>
+                <br>
+                <p>Here's to you, to us, and to all the beautiful moments yet to come. 🥂</p>
+                <br>
+                <p>I can't wait to hold your hand again, to see you smile, and to create a million more memories together.</p>
+                <br>
+                <p>Until then, know that across every mile, my heart beats only for you. ❤️</p>
+                <br>
+                <div class="signature">
+                    Forever yours,<br>
+                    Your Pookie 💕
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- content -->
-  <div class="content">
-    <!-- Letter -->
-    <section id="letter" class="section">
-      <div class="title">A Letter From Your Pookie 💌</div>
-      <div class="muted" style="margin-top:10px">
-        My Dearest Jaan,
-        <br><br>
-        As you turn another year more beautiful, I find myself miles away but closer to you than ever in my heart...
-      </div>
-    </section>
+    <script>
+        const correctPassword = "Cupcake@1710";
 
-    <!-- Memories -->
-    <section id="memories" class="section" style="padding-top:34px">
-      <div class="title">Our Beautiful Journey 🌟</div>
-      <div class="mem-list">
-        <div class="mem-item">
-          <div class="mem-date">March 21, 2025</div>
-          <div class="mem-text">The Train to Patna — you rested on my lap, I gave you a head massage, I left my heart with you.</div>
-        </div>
-        <div class="mem-item">
-          <div class="mem-date">April 2, 2025</div>
-          <div class="mem-text">Parasnath Meeting — when you were unwell, seeing you made everything better.</div>
-        </div>
-        <div class="mem-item">
-          <div class="mem-date">April 22, 2025</div>
-          <div class="mem-text">V Mart — our first real date, I got lost in your eyes.</div>
-        </div>
-        <div class="mem-item">
-          <div class="mem-date">May 5, 2025</div>
-          <div class="mem-text">The Light Cut Moment — your smile shone brightest in the dark.</div>
-        </div>
-      </div>
-    </section>
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (input === correctPassword) {
+                document.getElementById('passwordScreen').classList.add('hidden');
+                setTimeout(() => {
+                    document.getElementById('mainContent').classList.add('visible');
+                    createFloatingHearts();
+                }, 500);
+            } else {
+                errorMessage.classList.add('show');
+                document.getElementById('passwordInput').value = '';
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 3000);
+            }
+        }
 
-    <!-- reveals (clean) -->
-    <section class="section">
-      <div class="title">Click to Reveal 💝</div>
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
 
-      <div style="margin-top:12px">
-        <div class="reveal" onclick="toggleReveal(this)">
-          <strong>💭 What I Love Most About You</strong>
-          <div class="content"><p class="muted" style="margin-top:10px">I love your gentle spirit, your brown eyes, little joys like kiwis & mangoes, and how you call me Pookie.</p></div>
-        </div>
+        function toggleReveal(id) {
+            const element = document.getElementById(id);
+            element.classList.toggle('visible');
+        }
 
-        <div class="reveal" style="margin-top:12px" onclick="toggleReveal(this)">
-          <strong>🌙 My Promise to You</strong>
-          <div class="content"><p class="muted" style="margin-top:10px">I promise to cherish these miles until there are none. I promise to be your Pookie forever.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- gallery -->
-    <section id="gallery" class="section">
-      <div class="title">Photos & Moments 📸</div>
-      <div class="muted" style="margin-top:8px">Click to enlarge. Replace placeholder images inside <code>/images/</code>.</div>
-
-      <div class="gallery">
-        <img src="/images/photo1.jpg" alt="photo1" onclick="openLightbox(this)" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27130%27 viewBox=%270 0 180 130%27%3E%3Crect fill=%27%23fff0f6%27 width=%27180%27 height=%27130%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 fill=%27%239b8cff%27 font-family=%27Poppins%27 font-size=%2712%27%3EAdd%20Images%3C/text%3E%3C/svg%3E';">
-        <img src="/images/photo2.jpg" alt="photo2" onclick="openLightbox(this)" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27130%27 viewBox=%270 0 180 130%27%3E%3Crect fill=%27%23fff6f8%27 width=%27180%27 height=%27130%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 fill=%27%23ff7ab6%27 font-family=%27Poppins%27 font-size=%2712%27%3EAdd%20Images%3C/text%3E%3C/svg%3E';">
-        <img src="/images/photo3.jpg" alt="photo3" onclick="openLightbox(this)" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27130%27 viewBox=%270 0 180 130%27%3E%3Crect fill=%27%23f7eef6%27 width=%27180%27 height=%27130%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 fill=%27%239b8cff%27 font-family=%27Poppins%27 font-size=%2712%27%3EAdd%20Images%3C/text%3E%3C/svg%3E';">
-        <img src="/images/photo4.jpg" alt="photo4" onclick="openLightbox(this)" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27130%27 viewBox=%270 0 180 130%27%3E%3Crect fill=%27%23fff8f9%27 width=%27180%27 height=%27130%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 fill=%27%23ff7ab6%27 font-family=%27Poppins%27 font-size=%2712%27%3EAdd%20Images%3C/text%3E%3C/svg%3E';">
-      </div>
-    </section>
-
-    <footer>Made with ❤️ — Your Pookie • Optimized for a clean, cinematic look</footer>
-  </div>
-
-  <!-- lightbox -->
-  <div id="lightbox" class="lightbox" onclick="closeLightbox()" aria-hidden="true">
-    <img id="lightboxImg" src="" alt="enlarged">
-  </div>
-
-  <script>
-    // password (unchanged)
-    const correctPassword = "Cupcake@1710";
-    function checkPassword(){
-      const v = document.getElementById('passwordInput').value;
-      if(v === correctPassword){
-        document.getElementById('passwordScreen').classList.add('hidden');
-        document.getElementById('heroTitle').focus();
-      } else {
-        alert('Incorrect password — try again');
-        document.getElementById('passwordInput').value = '';
-      }
-    }
-    document.getElementById('passwordInput').addEventListener('keypress', (e)=>{ if(e.key==='Enter') checkPassword(); });
-
-    // reveal toggle
-    function toggleReveal(el){
-      el.classList.toggle('open');
-      const c = el.querySelector('.content');
-      if(el.classList.contains('open')){ c.style.maxHeight = c.scrollHeight + 'px'; c.style.opacity = 1; }
-      else { c.style.maxHeight = 0; c.style.opacity = 0; }
-    }
-
-    // simple lightbox
-    function openLightbox(img){
-      const lb = document.getElementById('lightbox');
-      document.getElementById('lightboxImg').src = img.src;
-      lb.classList.add('open'); lb.setAttribute('aria-hidden','false');
-    }
-    function closeLightbox(){ const lb=document.getElementById('lightbox'); lb.classList.remove('open'); lb.setAttribute('aria-hidden','true'); document.getElementById('lightboxImg').src=''; }
-    document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeLightbox(); });
-
-    // tiny animated dots movement (subtle)
-    document.querySelectorAll('.dot').forEach((d,i)=>{
-      d.style.animationDuration = (7 + i*1.5) + 's';
-      d.style.left = (6 + i*18) + '%';
-      d.style.top = (12 + i*18) + '%';
-    });
-
-    // scroll helpers
-    function scrollToSection(id){ const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth', block:'start'}); }
-  </script>
+        function createFloatingHearts() {
+            const container = document.getElementById('heartsContainer');
+            const hearts = ['🧁', '💕', '💝', '💖', '✨', '🌟', '💫'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                container.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 15000);
+            }, 800);
+        }
+    </script>
 </body>
 </html>
