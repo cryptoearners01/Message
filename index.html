@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday Cupcake 🧁</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-1: #ffe6f0;      /* soft pink */
+      --bg-2: #f3e7ff;      /* lavender */
+      --accent: #ff7ab6;    /* warm rose */
+      --accent-2: #9b8cff;  /* soft purple */
+      --glass: rgba(255,255,255,0.12);
+      --glass-2: rgba(255,255,255,0.06);
+      --text: #0f1221;
+      --muted: rgba(15,18,33,0.7);
+    }
+
+    /* reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: 'Poppins', sans-serif;
+      color:var(--text);
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(255,244,248,0.9), transparent 10%),
+                  radial-gradient(1000px 500px at 90% 90%, rgba(243,235,255,0.9), transparent 10%),
+                  linear-gradient(135deg,var(--bg-1),var(--bg-2));
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+      line-height:1.45;
+      padding-bottom:80px;
+    }
+
+    /* subtle star / sparkle layer */
+    .sparkles{
+      position:fixed; inset:0; pointer-events:none; z-index:0;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.22) 0 2px, transparent 2px),
+        radial-gradient(circle at 70% 10%, rgba(255,255,255,0.18) 0 2px, transparent 2px),
+        radial-gradient(circle at 40% 70%, rgba(255,255,255,0.14) 0 2px, transparent 2px);
+      background-repeat:repeat-x;
+      opacity:0.9;
+      mix-blend-mode:overlay;
+      animation: twinkle 6s linear infinite;
+    }
+    @keyframes twinkle{
+      0%{opacity:0.7}
+      50%{opacity:1}
+      100%{opacity:0.7}
+    }
+
+    /* container */
+    .wrap{max-width:1100px;margin:40px auto;padding:20px;position:relative;z-index:2}
+
+    /* password overlay (glass modal) */
+    #passwordScreen{
+      position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(180deg, rgba(10,8,16,0.65), rgba(10,8,16,0.85));
+      backdrop-filter: blur(6px);
+      z-index:9999; transition:opacity .45s ease, transform .45s ease;
+    }
+    #passwordScreen.hidden{opacity:0;pointer-events:none;transform:scale(1.02)}
+    .pwd-card{
+      width:min(94%,520px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border-radius:18px;
+      padding:28px;
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:0 10px 30px rgba(0,0,0,0.35);
+      text-align:center;
+      color: #fff;
+      font-family: 'Playfair Display', serif;
+    }
+    .pwd-card h2{font-size:1.9rem;margin-bottom:6px;letter-spacing:0.4px}
+    .pwd-card p{font-size:0.95rem;opacity:0.9;margin-bottom:18px}
+    .pwd-input{
+      width:100%; padding:14px 16px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);
+      background:rgba(255,255,255,0.02); color:#fff; margin-bottom:12px; font-size:1rem;
+    }
+    .pwd-btn{
+      display:inline-block;padding:12px 28px;border-radius:12px;border:none;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#fff;
+      font-weight:600;cursor:pointer; box-shadow:0 6px 18px rgba(155,140,255,0.18);
+      transform:translateZ(0);
+    }
+    .pwd-err{color:#ffd2d8;font-size:0.9rem;height:20px;margin-top:8px;opacity:0; transition:opacity .25s}
+    .pwd-err.show{opacity:1}
+
+    /* Hero */
+    .hero{
+      display:flex; gap:28px; align-items:center; justify-content:space-between;
+      padding:28px;border-radius:18px; background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      box-shadow: 0 6px 24px rgba(16,12,36,0.08);
+      border:1px solid rgba(255,255,255,0.08);
+      position:relative; overflow:hidden;
+    }
+    .hero-left{flex:1; padding:18px}
+    .hero-right{width:320px; min-width:220px; display:flex; align-items:center; justify-content:center; padding:8px}
+    .title{
+      font-family:'Playfair Display',serif;
+      font-size:2.8rem; color:var(--text); margin-bottom:8px; line-height:1.05;
+      text-shadow: 0 6px 30px rgba(155,122,180,0.12);
+      transform:translateY(-6px);
+      animation: floatText 1.2s ease both;
+    }
+    @keyframes floatText{from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)}}
+    .subtitle{font-size:1.05rem;color:var(--muted); margin-bottom:12px}
+    .date{font-weight:600;color:var(--accent-2); font-size:0.95rem; margin-bottom:18px}
+    .cta-row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+    .btn{
+      padding:10px 16px;border-radius:12px;border:none;background:white;color:var(--text);
+      font-weight:600;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,0.06);
+    }
+    .btn-ghost{
+      padding:10px 14px;border-radius:12px;border:1px solid rgba(15,18,33,0.06);
+      background:transparent;color:var(--muted); font-weight:600; cursor:pointer;
+    }
+
+    /* hero image (circular) */
+    .hero-photo{
+      width:280px;height:280px;border-radius:20px; overflow:hidden; display:block;
+      background:linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 30px rgba(150,110,160,0.08); position:relative;
+    }
+    .hero-photo img{width:100%;height:100%;object-fit:cover; display:block}
+    .photo-frame{
+      position:absolute; inset:auto 10px 10px auto; padding:6px 10px; border-radius:999px;
+      background:linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      font-size:0.85rem; font-weight:600; color:var(--muted);
+    }
+
+    /* floating icons/hearts */
+    .floatables{position:absolute; inset:0; pointer-events:none;}
+    .floatable{
+      position:absolute; font-size:20px; opacity:0.9; transform-origin:center;
+      animation: rise 12s linear infinite;
+      filter: drop-shadow(0 6px 18px rgba(190,110,150,0.12));
+    }
+    @keyframes rise{
+      0%{transform:translateY(110%) scale(0.8) rotate(0deg); opacity:0}
+      10%{opacity:0.9}
+      90%{opacity:0.9}
+      100%{transform:translateY(-20%) scale(1.05) rotate(360deg); opacity:0}
+    }
+
+    /* sections */
+    .sections{margin-top:26px}
+    .card{
+      margin:18px 0; padding:20px;border-radius:14px; background:var(--glass);
+      border:1px solid rgba(255,255,255,0.06); backdrop-filter: blur(6px);
+      box-shadow:0 10px 24px rgba(9,8,12,0.06);
+      transition:transform .28s ease, box-shadow .28s ease;
+    }
+    .card:hover{transform:translateY(-6px); box-shadow:0 18px 36px rgba(9,8,12,0.09)}
+
+    .mem-date{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--accent-2);margin-bottom:8px}
+    .mem-text{color:var(--muted);font-size:1rem;line-height:1.6}
+
+    /* reveal box */
+    .reveal{
+      cursor:pointer; padding:18px;border-radius:12px;border:1px dashed rgba(255,255,255,0.06);
+      display:flex; align-items:center; gap:12px; justify-content:space-between;
+    }
+    .reveal .hint{color:var(--muted); font-weight:600}
+    .reveal .content{max-height:0; overflow:hidden; transition:max-height .35s ease, opacity .3s ease; opacity:0}
+    .reveal.open .content{max-height:420px; opacity:1; margin-top:14px}
+
+    /* wishes grid */
+    .wishes-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-top:12px}
+    .wish{padding:14px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.008)); border:1px solid rgba(255,255,255,0.04)}
+    .wish .icon{font-size:1.6rem;margin-bottom:8px}
+    .wish p{color:var(--muted);font-weight:600}
+
+    /* gallery */
+    .gallery{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px}
+    .gallery img{width:100%;height:140px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,0.06);cursor:pointer;display:block;transition:transform .22s ease}
+    .gallery img:hover{transform:scale(1.03)}
+
+    /* lightbox */
+    .lightbox{
+      position:fixed; inset:0; display:flex;align-items:center;justify-content:center;
+      background:rgba(4,4,8,0.7); z-index:9998; opacity:0; pointer-events:none; transition:opacity .25s;
+    }
+    .lightbox.open{opacity:1; pointer-events:auto}
+    .lightbox img{max-width:92%; max-height:86%; border-radius:12px; box-shadow:0 18px 60px rgba(6,6,10,0.6)}
+
+    /* footer */
+    footer{margin-top:36px;text-align:center;color:var(--muted);font-size:0.95rem;padding:20px 0}
+
+    /* responsive */
+    @media (max-width:900px){
+      .hero{flex-direction:column; gap:18px}
+      .hero-right{width:100%}
+      .hero-photo{width:92%; height:220px}
+      .title{font-size:2rem}
+    }
+    @media (max-width:480px){
+      .title{font-size:1.5rem}
+      .hero-photo{height:180px}
+    }
+
+  </style>
+</head>
+<body>
+  <!-- sparkles background -->
+  <div class="sparkles"></div>
+
+  <!-- Password Screen (kept) -->
+  <div id="passwordScreen">
+    <div class="pwd-card" role="dialog" aria-modal="true" aria-label="Enter password to open surprise">
+      <h2>🧁 A Little Surprise Awaits</h2>
+      <p>Enter the password to unlock the special birthday page</p>
+      <input id="passwordInput" class="pwd-input" type="password" placeholder="Enter password" aria-label="password">
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:6px">
+        <button class="pwd-btn" onclick="checkPassword()">Unlock</button>
+        <button class="btn-ghost" onclick="revealHint()">Hint</button>
+      </div>
+      <div id="pwdErr" class="pwd-err">Incorrect password — try again</div>
+      <div style="margin-top:10px;font-size:0.85rem;color:rgba(255,255,255,0.5)">Tip: The password is case-sensitive.</div>
+    </div>
+  </div>
+
+  <div class="wrap" id="mainWrap" aria-hidden="true">
+
+    <!-- HERO -->
+    <section class="hero card" aria-labelledby="title">
+      <div class="hero-left">
+        <div id="title" class="title">Happy Birthday, Cupcake 🧁</div>
+        <div class="subtitle">To the sweetest person in my world — every memory with you is a treasure.</div>
+        <div class="date">October 17, 2025</div>
+
+        <div class="cta-row" style="margin-top:14px">
+          <button class="btn" onclick="scrollToSection('memories')">Our Memories</button>
+          <button class="btn" onclick="scrollToSection('gallery')">See Photos</button>
+          <button class="btn-ghost" onclick="toggleReveal('reveal1')">Open Letter</button>
+        </div>
+
+        <div style="margin-top:18px;color:var(--muted);font-size:0.95rem">
+          <strong style="color:var(--accent)">Forever yours</strong> — Your Pookie 💕
+        </div>
+      </div>
+
+      <div class="hero-right" aria-hidden="false">
+        <div class="hero-photo" title="Her photo (replace with your own)">
+          <!-- Replace /images/photo-hero.jpg with your real hero image in repo -->
+          <img id="heroImg" src="/images/photo-hero.jpg" alt="Hero photo placeholder" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27280%27 height=%27280%27 viewBox=%270 0 280 280%27%3E%3Crect fill=%27%23f8eaf0%27 width=%27280%27 height=%27280%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 fill=%27%239b8cff%27 font-family=%27Poppins%27 font-size=%2720%27%3EAdd%20Hero%20Image%3C/text%3E%3C/svg%3E';">
+          <div class="photo-frame">Your Queen 👑</div>
+        </div>
+      </div>
+
+      <!-- floatable animations (hearts + sparkles) -->
+      <div class="floatables" aria-hidden="true">
+        <div class="floatable" style="left:6%; top:70%; animation-delay:0s">🧁</div>
+        <div class="floatable" style="left:22%; top:85%; animation-delay:1.8s; font-size:22px">💕</div>
+        <div class="floatable" style="left:42%; top:92%; animation-delay:0.9s; font-size:18px">✨</div>
+        <div class="floatable" style="left:62%; top:80%; animation-delay:2.6s; font-size:24px">💖</div>
+        <div class="floatable" style="left:82%; top:88%; animation-delay:1.2s; font-size:20px">🌟</div>
+      </div>
+    </section>
+
+    <!-- LETTER -->
+    <section id="letter" class="card" style="margin-top:20px">
+      <h2 style="font-family:'Playfair Display',serif;color:var(--accent-2);margin-bottom:10px">A Letter From Your Pookie 💌</h2>
+      <div style="color:var(--muted);font-size:1rem;line-height:1.7" aria-live="polite">
+        <p>My Dearest Jaan,</p>
+        <p style="margin-top:10px">
+          As you turn another year more beautiful, I find myself miles away but closer to you than ever in my heart. Distance means so little when someone means so much, and you, my love, mean everything to me.
+        </p>
+        <p style="margin-top:10px">
+          Every moment we've shared — from that first train ride to Patna where you rested on my lap, to our first date at V Mart — are moments I will keep forever.
+        </p>
+        <p style="margin-top:10px">I love everything about you, and today I wish I could be there to hold your hand. Until then, my love travels across every mile to reach you.</p>
+      </div>
+    </section>
+
+    <!-- MEMORIES -->
+    <section id="memories" class="sections">
+      <div class="card">
+        <h3 style="font-family:'Playfair Display',serif;color:var(--accent)">Our Beautiful Journey 🌟</h3>
+
+        <div style="margin-top:14px">
+          <div class="card" style="padding:14px">
+            <div class="mem-date">March 21, 2025 - The Train to Patna 🚂</div>
+            <div class="mem-text">We talked freely, and time stopped. You rested on my lap and I gave you a head massage while you dozed. I left my heart with you.</div>
+          </div>
+
+          <div class="card" style="padding:14px">
+            <div class="mem-date">April 2, 2025 - Parasnath Meeting 💫</div>
+            <div class="mem-text">You weren't feeling well, but seeing you made everything better. You are the most beautiful thing I've ever seen.</div>
+          </div>
+
+          <div class="card" style="padding:14px">
+            <div class="mem-date">April 22, 2025 - V Mart (First Real Date) 💕</div>
+            <div class="mem-text">I held your hand and got lost in your eyes. It felt like it was only you and me in the world.</div>
+          </div>
+
+          <div class="card" style="padding:14px">
+            <div class="mem-date">May 5, 2025 - The Light Cut Moment ⚡</div>
+            <div class="mem-text">When the lights went out at V Mart, I saw you in a new light — it was unforgettable.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE REVEALS -->
+    <section class="card" style="margin-top:18px">
+      <h3 style="font-family:'Playfair Display',serif;color:var(--accent-2)">Click to Reveal 💝</h3>
+
+      <div style="margin-top:12px">
+        <div class="reveal" onclick="toggleRevealBox(this)">
+          <div>
+            <div style="font-weight:700">💭 What I Love Most About You</div>
+            <div class="hint" style="margin-top:6px">(click to reveal)</div>
+          </div>
+          <div style="font-size:20px">▼</div>
+
+          <div class="content" style="margin-top:12px">
+            <p style="color:var(--muted)"><strong>I love your gentle spirit</strong>, your brown eyes, your small joys like kiwis and mangoes, and the way you call me Pookie. I love you more each day.</p>
+          </div>
+        </div>
+
+        <div class="reveal" style="margin-top:12px" onclick="toggleRevealBox(this)">
+          <div>
+            <div style="font-weight:700">🌙 My Promise to You</div>
+            <div class="hint" style="margin-top:6px">(click to reveal)</div>
+          </div>
+          <div style="font-size:20px">▼</div>
+
+          <div class="content" style="margin-top:12px">
+            <p style="color:var(--muted)">I promise to cherish these miles until there are none. I promise to be your Pookie forever — to protect and love you always.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery" class="card" style="margin-top:18px">
+      <h3 style="font-family:'Playfair Display',serif;color:var(--accent)">Photos & Moments 📸</h3>
+      <p style="color:var(--muted);margin-top:8px">Click to enlarge. Replace the placeholder image files in <code>/images/</code> with your real files.</p>
+
+      <div class="gallery" style="margin-top:12px">
+        <!-- Replace /images/photo1.jpg etc. with your photos -->
+        <img src="/images/photo1.jpg" alt="photo 1" loading="lazy" onclick="openLightbox(this)" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27140%27 viewBox=%270 0 180 140%27%3E%3Crect fill=%27%23f2e6f6%27 width=%27180%27 height=%27140%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 fill=%27%239b8cff%27 font-family=%27Poppins%27 font-size=%2712%27%3EAdd%20Images%3C/text%3E%3C/svg%3E';">
+        <img src="/images/photo2.jpg" alt="photo 2" loading="lazy" onclick="openLightbox(this)" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27140%27 viewBox=%270 0 180 140%27%3E%3Crect fill=%27%23f8f0f6%27 width=%27180%27 height=%27140%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 fill=%27%23ff7ab6%27 font-family=%27Poppins%27 font-size=%2712%27%3EAdd%20Images%3C/text%3E%3C/svg%3E';">
+        <img src="/images/photo3.jpg" alt="photo 3" loading="lazy" onclick="openLightbox(this)" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27140%27 viewBox=%270 0 180 140%27%3E%3Crect fill=%27%23f7eef6%27 width=%27180%27 height=%27140%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 fill=%27%239b8cff%27 font-family=%27Poppins%27 font-size=%2712%27%3EAdd%20Images%3C/text%3E%3C/svg%3E';">
+        <img src="/images/photo4.jpg" alt="photo 4" loading="lazy" onclick="openLightbox(this)" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27140%27 viewBox=%270 0 180 140%27%3E%3Crect fill=%27%23fff0f8%27 width=%27180%27 height=%27140%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 fill=%27%23ff7ab6%27 font-family=%27Poppins%27 font-size=%2712%27%3EAdd%20Images%3C/text%3E%3C/svg%3E';">
+      </div>
+    </section>
+
+    <!-- WISHES -->
+    <section class="card" style="margin-top:18px">
+      <h3 style="font-family:'Playfair Display',serif;color:var(--accent)">Wishes for the Year Ahead ✨</h3>
+      <div class="wishes-grid" style="margin-top:12px">
+        <div class="wish"><div class="icon">🌟</div><p>May this year bring endless joy.</p></div>
+        <div class="wish"><div class="icon">💫</div><p>May all your dreams come true.</p></div>
+        <div class="wish"><div class="icon">🌸</div><p>May laughter fill your days.</p></div>
+        <div class="wish"><div class="icon">🦋</div><p>May you continue to blossom.</p></div>
+      </div>
+    </section>
+
+    <footer>
+      Made with ❤️ — Your Pookie • Page optimized for GitHub Pages.
+    </footer>
+  </div>
+
+  <!-- simple lightbox -->
+  <div id="lightbox" class="lightbox" onclick="closeLightbox()" role="dialog" aria-hidden="true">
+    <img id="lightboxImg" src="" alt="enlarged photo">
+  </div>
+
+  <script>
+    /********** PASSWORD (client-side) **********/
+    // kept exactly as requested
+    const correctPassword = "Cupcake@1710";
+
+    function checkPassword(){
+      const input = document.getElementById('passwordInput').value;
+      const err = document.getElementById('pwdErr');
+      if(input === correctPassword){
+        // hide overlay
+        document.getElementById('passwordScreen').classList.add('hidden');
+        // reveal main content and enable accessibility
+        const wrap = document.getElementById('mainWrap');
+        setTimeout(()=>{ wrap.setAttribute('aria-hidden','false') }, 480);
+        // start soft animations (optional)
+        startFloatingLoops();
+      } else {
+        err.classList.add('show');
+        setTimeout(()=> err.classList.remove('show'), 2500);
+        document.getElementById('passwordInput').value = '';
+      }
+    }
+
+    document.getElementById('passwordInput').addEventListener('keypress', function(e){
+      if(e.key === 'Enter') checkPassword();
+    });
+
+    function revealHint(){
+      alert('Hint: It\'s something sweet + a date. (Case sensitive.)');
+    }
+
+    /********** reveal boxes **********/
+    function toggleRevealBox(el){
+      el.classList.toggle('open');
+    }
+
+    function toggleReveal(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.classList.toggle('visible');
+    }
+
+    /********** lightbox **********/
+    function openLightbox(img){
+      const lb = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lightboxImg');
+      lbImg.src = img.src;
+      lb.classList.add('open');
+      lb.setAttribute('aria-hidden','false');
+    }
+    function closeLightbox(){
+      const lb = document.getElementById('lightbox');
+      lb.classList.remove('open');
+      lb.setAttribute('aria-hidden','true');
+    }
+
+    /********** utility: scroll to section **********/
+    function scrollToSection(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    /********** floating loops: gentle extra hearts/sparkles (runs after unlock) **********/
+    function startFloatingLoops(){
+      // create simple floating emoji elements across the page
+      const parent = document.querySelector('.floatables');
+      if(!parent) return;
+      const symbols = ['💖','🧁','✨','💕','🌟','💫'];
+      // create some extras
+      for(let i=0;i<10;i++){
+        const span = document.createElement('div');
+        span.className = 'floatable';
+        span.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+        span.style.left = (5 + Math.random()*90) + '%';
+        span.style.top = (60 + Math.random()*30) + '%';
+        span.style.fontSize = (14 + Math.random()*18) + 'px';
+        span.style.animationDelay = (Math.random()*4) + 's';
+        span.style.transform = 'translateY(0)';
+        parent.appendChild(span);
+        // auto-remove after long time to keep DOM light
+        setTimeout(()=> span.remove(), 19000 + Math.random()*8000);
+      }
+    }
+
+    // small accessibility: close lightbox on ESC
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){
+        closeLightbox();
+      }
+    });
+
+    // Allow keyboard focus to dismiss password on Enter (already handled)
+  </script>
+</body>
+</html>
